@@ -1,3 +1,5 @@
+#pragma once
+
 #include <FastLED.h>
 
 #define LED_COUNT   22
