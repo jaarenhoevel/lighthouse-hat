@@ -1,6 +1,7 @@
 #include <PixelMatrix.h>
+#include <RotatingBeamEffect.cpp>
 
-PixelMatrix* pm;
+PixelMatrix *pm;
 
 void setup() {
     Serial.begin(921600);
@@ -8,10 +9,8 @@ void setup() {
     
     pm = new PixelMatrix();
 
-    fill_gradient_RGB(pm->pixels, PIXEL_COUNT, CRGB::Black, CRGB::White, CRGB::Black, CRGB::Black);
-    fill_rainbow_circular(pm->filter, PIXEL_COUNT, 0);
-
-    pm->setRotation(1500);
+    RotatingBeamEffect *rbe = new RotatingBeamEffect(pm);
+    rbe->init(2000, CRGB::Blue, CRGB::Green);
 }
 
 void loop() {
