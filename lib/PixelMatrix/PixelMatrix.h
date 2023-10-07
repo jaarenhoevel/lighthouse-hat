@@ -22,6 +22,7 @@ class PixelMatrix {
         CRGB* filter;
 
         void setRotation(uint16_t speed = 0, bool enabled = true);
+        void setMillisOffset(uint32_t offset = 0);
 
     private:
         CRGB* leds;
@@ -29,4 +30,6 @@ class PixelMatrix {
         float rotation = 0.f;
         bool rotationEnabled = false;
         uint16_t rotationSpeed = 2000; // ms per rotation
+
+        uint32_t millisOffset = 0;
 };

@@ -14,9 +14,13 @@ PixelMatrix::PixelMatrix() {
     this->update();
 }
 
+void PixelMatrix::setMillisOffset(uint32_t offset) {
+    this->millisOffset = offset;
+}
+
 void PixelMatrix::update() {
     if (this->rotationEnabled) {
-        this->rotation = ((millis()) % this->rotationSpeed) / (1.f * this->rotationSpeed);
+        this->rotation = ((millis() + this->millisOffset) % this->rotationSpeed) / (1.f * this->rotationSpeed);
     } else {
         this->rotation = 0.f;
     }
