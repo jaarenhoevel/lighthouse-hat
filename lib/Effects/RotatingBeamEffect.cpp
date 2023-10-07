@@ -11,7 +11,7 @@ class RotatingBeamEffect: public Effect {
     public: void init(uint32_t param1 = 0, uint32_t param2 = 0, uint32_t param3 = 0, uint32_t param4 = 0) {        
         Effect::init(param1, param2, param3, param4);
 
-        CRGB colorA = ColorTemperature::Candle;
+        CRGB colorA = CRGB::White;
         if (param2 != 0) {
             colorA = param2;
         }
