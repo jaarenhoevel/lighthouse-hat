@@ -10,7 +10,7 @@
 #define LED_COLOR   GRB
 #define LED_PIN     D3
 
-#define PIXEL_COUNT 100
+#define PIXEL_COUNT 256
 
 class PixelMatrix {
     public:

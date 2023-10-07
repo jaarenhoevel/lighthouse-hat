@@ -1,19 +1,15 @@
-#include <PixelMatrix.h>
-#include <RotatingBeamEffect.cpp>
+#include <Controller.h>
 
-PixelMatrix *pm;
+Controller *controller;
 
 void setup() {
     Serial.begin(921600);
-    delay(250);
+    delay(500);
     
-    pm = new PixelMatrix();
-
-    RotatingBeamEffect *rbe = new RotatingBeamEffect(pm);
-    rbe->init(2000, CRGB::Blue, CRGB::Green);
+    controller = new Controller();
 }
 
 void loop() {
-    delay(25);
-    pm->update();
+    controller->update();
+    //delay(10);
 }

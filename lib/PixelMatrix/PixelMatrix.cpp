@@ -25,7 +25,7 @@ void PixelMatrix::update() {
     // fill_gradient_RGB(this->pixels, PIXEL_COUNT, CRGB::Black, CRGB(255, 255, 150), CRGB::Black, CRGB::Black);
     
     for (uint8_t i = 0; i < LED_COUNT; i ++) {
-        Serial.printf("\nCalculating position for led %u", i);
+        // Serial.printf("\nCalculating position for led %u", i);
 
         float pos = ((i / ((LED_COUNT - 1) * 1.f)) * LED_TURNS) + INIT_TURN;
         float posRotated = pos + this->rotation;
