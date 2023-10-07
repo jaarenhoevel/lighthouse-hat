@@ -14,6 +14,8 @@ Controller::Controller() {
 }
 
 void Controller::update() {
+    if (!this->isMaster && millis() - this->lastBeaconReceived > BEACON_INTERVAL) this->isMaster = true; // No beacon received for a long time -> we are master now :))
+    
     if (this->getMillis() - this->lastFrame < FRAME_INTERVAL) return;
 
     // Serial.printf("\nFrame");
@@ -56,7 +58,7 @@ Effect* Controller::getEffectById(uint16_t id) {
         return this->strobeEffect;
     
     default:
-        break;
+        return NULL;
     }   
 }
 
@@ -72,9 +74,19 @@ void Controller::nextEffect() {
         this->setEffect(this->rainbowEffect, 5000);
         break;
 
-    case Controller::Effects::ROTATING_BEAM:
-        this->setEffect(this->rotatingBeamEffect, 2000, CRGB::Red, CRGB::Orange);
+    case Controller::Effects::ROTATING_BEAM: {       
+        uint8_t hue = random8(255);
+        CRGB color = CHSV(hue, 255, 255);
+        CRGB color2 = CHSV(hue + 50, 255, 255);
+
+        uint32_t param2 = 0;
+        uint32_t param3 = 0;
+        memcpy(&param2, &color, sizeof(CRGB));
+        memcpy(&param3, &color2, sizeof(CRGB));
+        
+        this->setEffect(this->rotatingBeamEffect, 2000, param2, param3);
         break;
+    }
 
     case Controller::Effects::STROBE:
         this->setEffect(this->strobeEffect, 2500, 4);
@@ -96,7 +108,7 @@ uint32_t Controller::getMillis() {
 }
 
 void Controller::broadcastStatus() {
-    beacon status;
+    Beacon status;
 
     status.magic = MAGIC;
     status.millis = millis();
@@ -105,27 +117,46 @@ void Controller::broadcastStatus() {
     status.param2 = this->effectParams[1];
     status.param3 = this->effectParams[2];
     status.param4 = this->effectParams[3];
+
+    uint8_t addr[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+
+    esp_now_send(addr, (uint8_t *) &status, sizeof(status));
+
+    Serial.printf("\nSent beacon");
 }
 
-void Controller::handleBeacon(const uint8_t * mac, const uint8_t *data, int len) {
-    beacon* status =(beacon*) data;
+void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
+    Serial.printf("\nReceived something... let's see");
+    
+    if (len != sizeof(Beacon)) {
+        Serial.printf("\nWrong len!");
+        return;   
+    }
+    
+    Beacon status;
 
-    if (status->magic != MAGIC) {
-        Serial.printf("Magic bytes did not match!");
+    memcpy(&status, data, len);
+
+    if (status.magic != MAGIC) {
+        Serial.printf("\nMagic bytes did not match!");
         return;
     }
 
-    if (status->millis < millis()) {
+    this->lastBeaconReceived = millis();
+
+    if (status.millis < millis()) {
         this->isMaster = true;
         this->millisOffset = 0;
+        this->pm->setMillisOffset(this->millisOffset);
 
-        Serial.printf("I am the master :)");
+        Serial.printf("\nI am the master :)");
         return;
     }
 
     this->isMaster = false;
-    this->millisOffset = status->millis - millis();
-    Serial.printf("Received master millis :( adjusting offset");
+    this->millisOffset = status.millis - millis();
+    this->pm->setMillisOffset(this->millisOffset);
+    Serial.printf("\nReceived master millis :( adjusting offset");
 
-    this->setEffect(this->getEffectById(status->effect), status->param1, status->param2, status->param3, status->param4);
+    this->setEffect(this->getEffectById(status.effect), status.param1, status.param2, status.param3, status.param4);
 }
