@@ -8,8 +8,8 @@ class BlinderEffect: public Effect {
      * param2: color
     */
     public: 
-        void init(uint32_t param1 = 0, uint32_t param2 = 0, uint32_t param3 = 0, uint32_t param4 = 0) {        
-            Effect::init(param1, param2, param3, param4);
+        void init(bool isMaster, uint32_t param1 = 0, uint32_t param2 = 0, uint32_t param3 = 0, uint32_t param4 = 0) {        
+            Effect::init(isMaster, param1, param2, param3, param4);
             this->last = 0;
             
             this->color = ColorTemperature::Candle;
@@ -19,7 +19,7 @@ class BlinderEffect: public Effect {
 
             fill_solid(pm->filter, PIXEL_COUNT, CRGB::White);
 
-            pm->setRotation(0, false);    
+            pm->setRotation(0, false);  
 
         };
 

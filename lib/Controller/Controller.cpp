@@ -32,7 +32,7 @@ void Controller::update() {
 }
 
 void Controller::setEffect(Effect *effect, uint32_t param1, uint32_t param2, uint32_t param3, uint32_t param4) {
-    effect->init(param1, param2, param3, param4);
+    effect->init(this->isMaster, param1, param2, param3, param4);
     this->currentEffect = effect;
 
     this->effectParams[0] = param1;

@@ -9,8 +9,8 @@ class StrobeEffect: public Effect {
      * param3: color
     */
     public: 
-        void init(uint32_t param1 = 0, uint32_t param2 = 0, uint32_t param3 = 0, uint32_t param4 = 0) {        
-            Effect::init(param1, param2, param3, param4);
+        void init(bool isMaster, uint32_t param1 = 0, uint32_t param2 = 0, uint32_t param3 = 0, uint32_t param4 = 0) {        
+            Effect::init(isMaster, param1, param2, param3, param4);
             this->last = 0;
             this->on = false;
             this->flashes = 0; 

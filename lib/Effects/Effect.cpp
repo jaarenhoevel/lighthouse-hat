@@ -4,7 +4,8 @@ Effect::Effect(PixelMatrix *pm) {
     this->pm = pm;
 }
 
-void Effect::init(uint32_t param1, uint32_t param2, uint32_t param3, uint32_t param4) {
+void Effect::init(bool isMaster, uint32_t param1, uint32_t param2, uint32_t param3, uint32_t param4) {
+    this->isMaster = isMaster;
     this->param1 = param1;
     this->param2 = param2;
     this->param3 = param3;
