@@ -91,7 +91,7 @@ void Controller::nextEffect() {
     }
 
     case Controller::Effects::STROBE:
-        this->setEffect(this->strobeEffect, 2500, 4);
+        this->setEffect(this->strobeEffect, 2500, 4, CRGB::White, 2);
         break;
     
     default:
@@ -169,7 +169,7 @@ void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
         status.param3 == this->effectParams[2] && 
         status.param4 == this->effectParams[3]) return;
 
-    Serial.printf("\nReceived new effect!");
+    Serial.printf("\nReceived new effect %u!", status.effect);
 
     this->setEffect(this->getEffectById(status.effect), status.param1, status.param2, status.param3, status.param4);
     this->currentEffectId = status.effect;

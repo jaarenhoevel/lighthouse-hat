@@ -7,6 +7,7 @@ class StrobeEffect: public Effect {
      * param1: interval
      * param2: flash count
      * param3: color
+     * param4: total amount of repeats before exiting
     */
     public: 
         void init(bool isMaster, uint32_t param1 = 0, uint32_t param2 = 0, uint32_t param3 = 0, uint32_t param4 = 0) {        
@@ -14,12 +15,13 @@ class StrobeEffect: public Effect {
             this->last = 0;
             this->on = false;
             this->flashes = 0; 
+            this->resets = 0;
 
             this->param2 = param2 * 2;
             
             this->color = CRGB::White;
             if (param3 != 0) {
-                this->color = param2;
+                this->color = param3;
             }
 
             fill_solid(pm->filter, PIXEL_COUNT, CRGB::White);
@@ -37,6 +39,8 @@ class StrobeEffect: public Effect {
                 if (this->flashes == this->param2) {
                     this->last = millis - (millis % this->param1);
                     this->flashes = 0;
+                    this->resets ++;
+                    if (this->param4 != 0 && this->param4 == this->resets) return false;
                 }
             }
 
@@ -47,5 +51,6 @@ class StrobeEffect: public Effect {
         uint32_t last = 0;
         bool on = false;
         uint8_t flashes = 0;
+        uint8_t resets = 0;
         CRGB color;
 };
