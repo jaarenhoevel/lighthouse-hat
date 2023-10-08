@@ -77,7 +77,7 @@ void Controller::nextEffect() {
     case Controller::Effects::ROTATING_BEAM: {       
         uint8_t hue = random8(255);
         CRGB color = CHSV(hue, 255, 255);
-        CRGB color2 = CHSV(hue + 50, 255, 255);
+        CRGB color2 = CHSV(hue + 32, 255, 255);
 
         uint32_t param2 = 0;
         uint32_t param3 = 0;
