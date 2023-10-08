@@ -11,7 +11,7 @@
 
 #define FRAME_INTERVAL  25
 #define EFFECT_INTERVAL 10000
-#define BEACON_INTERVAL EFFECT_INTERVAL + 1000
+#define BEACON_INTERVAL 1000
 
 #define MAGIC           0xBEAC07
 
@@ -50,12 +50,13 @@ class Controller {
         StrobeEffect *strobeEffect;
 
         Effect *currentEffect = NULL;
+        uint16_t currentEffectId = 0;
 
         uint32_t effectParams[4] = {0, 0, 0, 0};
 
         bool isMaster = true;
 
-        uint32_t lastFrame, lastEffectChange, lastBeaconReceived = 0;
+        uint32_t lastFrame, lastEffectChange, lastBeaconReceived, lastBeaconSent = 0;
         int32_t millisOffset = 0;
 
         uint8_t effectIndex = 2;

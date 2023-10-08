@@ -14,8 +14,9 @@ Controller::Controller() {
 }
 
 void Controller::update() {
-    if (!this->isMaster && millis() - this->lastBeaconReceived > BEACON_INTERVAL) this->isMaster = true; // No beacon received for a long time -> we are master now :))
-    
+    if (!this->isMaster && millis() - this->lastBeaconReceived > BEACON_INTERVAL * 10) this->isMaster = true; // No beacon received for a long time -> we are master now :))
+    if (this->isMaster && millis() - this->lastBeaconSent > BEACON_INTERVAL) this->broadcastStatus();
+
     if (this->getMillis() - this->lastFrame < FRAME_INTERVAL) return;
 
     // Serial.printf("\nFrame");
@@ -27,7 +28,7 @@ void Controller::update() {
         this->lastEffectChange = this->getMillis();
     }
 
-    if (this->currentEffect != NULL && !this->currentEffect->update(this->getMillis())) this->nextEffect(); // Update effect when set and switch to next effect when effect returns false
+    if (this->currentEffect != NULL && !this->currentEffect->update(this->getMillis()) && this->isMaster) this->nextEffect(); // Update effect when set and switch to next effect when effect returns false
     this->pm->update();
 }
 
@@ -64,6 +65,7 @@ Effect* Controller::getEffectById(uint16_t id) {
 
 void Controller::nextEffect() {
     Serial.printf("\nNext effect %u", this->effectIndex);
+    this->currentEffectId = this->effectIndex; // update current effect index
     
     switch (this->effectIndex) {
     case Controller::Effects::BLINDER:
@@ -97,8 +99,6 @@ void Controller::nextEffect() {
         break;
     }
 
-    Serial.printf(" ... done");
-
     this->effectIndex ++;
     if (this->effectIndex == Controller::Effects::EFFECT_MAX) this->effectIndex = 0;
 }
@@ -112,7 +112,7 @@ void Controller::broadcastStatus() {
 
     status.magic = MAGIC;
     status.millis = millis();
-    status.effect = this->effectIndex;
+    status.effect = this->currentEffectId;
     status.param1 = this->effectParams[0];
     status.param2 = this->effectParams[1];
     status.param3 = this->effectParams[2];
@@ -122,11 +122,12 @@ void Controller::broadcastStatus() {
 
     esp_now_send(addr, (uint8_t *) &status, sizeof(status));
 
-    Serial.printf("\nSent beacon");
+    // Serial.printf("\nSent beacon");
+    this->lastBeaconSent = millis();
 }
 
 void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
-    Serial.printf("\nReceived something... let's see");
+    // Serial.printf("\nReceived something... let's see");
     
     if (len != sizeof(Beacon)) {
         Serial.printf("\nWrong len!");
@@ -149,14 +150,27 @@ void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
         this->millisOffset = 0;
         this->pm->setMillisOffset(this->millisOffset);
 
-        Serial.printf("\nI am the master :)");
+        // Serial.printf("\nI am the master :)");
         return;
     }
 
     this->isMaster = false;
     this->millisOffset = status.millis - millis();
     this->pm->setMillisOffset(this->millisOffset);
-    Serial.printf("\nReceived master millis :( adjusting offset");
+    // Serial.printf("\nReceived master millis :( adjusting offset");
+
+    // Serial.printf("\n\n\nBEACON DEBUG: millis %u, effect %u, param1 %u, param2 %u, param3 %u, param4 %u", 
+    //     status.millis, status.effect, status.param1, status.param2, status.param3, status.param4);
+
+    // Check if effect has changed...
+    if (status.effect == this->currentEffectId && 
+        status.param1 == this->effectParams[0] && 
+        status.param2 == this->effectParams[1] && 
+        status.param3 == this->effectParams[2] && 
+        status.param4 == this->effectParams[3]) return;
+
+    Serial.printf("\nReceived new effect!");
 
     this->setEffect(this->getEffectById(status.effect), status.param1, status.param2, status.param3, status.param4);
+    this->currentEffectId = status.effect;
 }
