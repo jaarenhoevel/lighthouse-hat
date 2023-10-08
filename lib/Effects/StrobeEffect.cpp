@@ -28,14 +28,14 @@ class StrobeEffect: public Effect {
         };
 
         bool update(uint32_t millis) {
-            if (millis - this->last > this->param1 && millis % this->param1 < this->param1 / 2) {
+            if (millis - (millis % this->param1) != this->last) {
                 fill_solid(pm->pixels, PIXEL_COUNT, this->on ? CRGB::Black : this->color);
                 this->on = !this->on;
 
                 this->flashes ++;
                 
                 if (this->flashes == this->param2) {
-                    this->last = millis;
+                    this->last = millis - (millis % this->param1);
                     this->flashes = 0;
                 }
             }
