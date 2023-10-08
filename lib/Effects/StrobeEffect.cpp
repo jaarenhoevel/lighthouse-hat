@@ -28,7 +28,7 @@ class StrobeEffect: public Effect {
         };
 
         bool update(uint32_t millis) {
-            if (millis - this->last > this->param1) {
+            if (millis - this->last > this->param1 && millis % this->param1 < this->param1 / 2) {
                 fill_solid(pm->pixels, PIXEL_COUNT, this->on ? CRGB::Black : this->color);
                 this->on = !this->on;
 
