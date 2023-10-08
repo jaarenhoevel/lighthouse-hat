@@ -22,13 +22,15 @@ class BlinderEffect: public Effect {
             pm->setRotation(0, false);
         };
 
-        void update(uint32_t millis) {
+        bool update(uint32_t millis) {
             fadeUsingColor(pm->pixels, PIXEL_COUNT, CRGB(220, 200, 200));
             
-            if (millis % this->param1 < 100) {
+            if ((millis + this->isMaster * (this->param1 / 2)) % this->param1 < 100) {
                 fill_solid(pm->pixels, PIXEL_COUNT, this->color);
                 this->last = millis;
             }
+
+            return true;
         }
 
     private:

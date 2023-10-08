@@ -12,6 +12,6 @@ void Effect::init(bool isMaster, uint32_t param1, uint32_t param2, uint32_t para
     this->param4 = param4;
 }
 
-void Effect::update(uint32_t millis) {
-    return;
+bool Effect::update(uint32_t millis) {
+    return true;
 }

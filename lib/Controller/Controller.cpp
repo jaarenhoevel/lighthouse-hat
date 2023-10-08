@@ -27,7 +27,7 @@ void Controller::update() {
         this->lastEffectChange = this->getMillis();
     }
 
-    if (this->currentEffect != NULL) this->currentEffect->update(this->getMillis());
+    if (this->currentEffect != NULL && !this->currentEffect->update(this->getMillis())) this->nextEffect(); // Update effect when set and switch to next effect when effect returns false
     this->pm->update();
 }
 
@@ -67,7 +67,7 @@ void Controller::nextEffect() {
     
     switch (this->effectIndex) {
     case Controller::Effects::BLINDER:
-        this->setEffect(this->blinderEffect, 1000);
+        this->setEffect(this->blinderEffect, 750);
         break;
 
     case Controller::Effects::RAINBOW:
