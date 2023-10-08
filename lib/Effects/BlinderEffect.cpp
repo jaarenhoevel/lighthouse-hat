@@ -19,17 +19,16 @@ class BlinderEffect: public Effect {
 
             fill_solid(pm->filter, PIXEL_COUNT, CRGB::White);
 
-            pm->setRotation(0, false);  
-
+            pm->setRotation(0, false);
         };
 
         void update(uint32_t millis) {
-            if (millis - this->last > this->param1) {
+            fadeUsingColor(pm->pixels, PIXEL_COUNT, CRGB(220, 200, 200));
+            
+            if (millis % this->param1 < 100) {
                 fill_solid(pm->pixels, PIXEL_COUNT, this->color);
                 this->last = millis;
             }
-
-            fadeUsingColor(pm->pixels, PIXEL_COUNT, CRGB(220, 200, 200));
         }
 
     private:
