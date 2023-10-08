@@ -149,6 +149,7 @@ void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
         this->isMaster = true;
         this->millisOffset = 0;
         this->pm->setMillisOffset(this->millisOffset);
+        this->pm->setRotationDirection(true);
 
         // Serial.printf("\nI am the master :)");
         return;
@@ -157,6 +158,8 @@ void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
     this->isMaster = false;
     this->millisOffset = status.millis - millis();
     this->pm->setMillisOffset(this->millisOffset);
+    this->pm->setRotationDirection(false); // Set default rotation direction to ccw
+
     // Serial.printf("\nReceived master millis :( adjusting offset");
 
     // Serial.printf("\n\n\nBEACON DEBUG: millis %u, effect %u, param1 %u, param2 %u, param3 %u, param4 %u", 

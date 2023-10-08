@@ -23,11 +23,13 @@ class PixelMatrix {
 
         void setRotation(uint16_t speed = 0, bool enabled = true);
         void setMillisOffset(uint32_t offset = 0);
+        void setRotationDirection(bool clockwise = true);
 
     private:
         CRGB* leds;
 
         float rotation = 0.f;
+        bool clockwise = true;
         bool rotationEnabled = false;
         uint16_t rotationSpeed = 2000; // ms per rotation
 

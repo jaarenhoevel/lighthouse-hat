@@ -18,9 +18,14 @@ void PixelMatrix::setMillisOffset(uint32_t offset) {
     this->millisOffset = offset;
 }
 
+void PixelMatrix::setRotationDirection(bool clockwise) {
+    this->clockwise = clockwise;
+}
+
 void PixelMatrix::update() {
     if (this->rotationEnabled) {
         this->rotation = ((millis() + this->millisOffset) % this->rotationSpeed) / (1.f * this->rotationSpeed);
+        if (!this->clockwise) this->rotation = fabs(this->rotation - 1.f);
     } else {
         this->rotation = 0.f;
     }
