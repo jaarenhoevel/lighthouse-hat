@@ -91,7 +91,7 @@ void Controller::nextEffect() {
     }
 
     case Controller::Effects::STROBE:
-        this->setEffect(this->strobeEffect, 2500, 4, CRGB::White, 2);
+        this->setEffect(this->strobeEffect, 2500, 4, CRGB::White, 5);
         break;
     
     default:

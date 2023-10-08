@@ -10,7 +10,7 @@
 #include <StrobeEffect.cpp>
 
 #define FRAME_INTERVAL  25
-#define EFFECT_INTERVAL 10000
+#define EFFECT_INTERVAL 60000
 #define BEACON_INTERVAL 1000
 
 #define MAGIC           0xBEAC07
