@@ -54,6 +54,7 @@ class Controller {
 
         Effect *currentEffect = NULL;
         uint16_t currentEffectId = 0;
+        uint16_t iterations = 0;
 
         uint32_t effectParams[4] = {0, 0, 0, 0};
 

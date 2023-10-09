@@ -72,43 +72,61 @@ void Controller::nextEffect() {
     this->currentEffectId = this->effectIndex; // update current effect index
     
     switch (this->effectIndex) {
-    case Controller::Effects::BLINDER:
-        this->setEffect(this->blinderEffect, 1000);
-        break;
+        case Controller::Effects::BLINDER:
+            this->setEffect(this->blinderEffect, 1000);
+            break;
 
-    case Controller::Effects::RAINBOW:
-        this->setEffect(this->rainbowEffect, 5000);
-        break;
+        case Controller::Effects::RAINBOW:
+            this->setEffect(this->rainbowEffect, 5000);
+            break;
 
-    case Controller::Effects::ROTATING_BEAM: {       
-        uint8_t hue = random8(255);
-        CRGB color = CHSV(hue, 255, 255);
-        CRGB color2 = CHSV(hue + 32, 255, 255);
+        case Controller::Effects::ROTATING_BEAM: {       
+            uint8_t hue = random8(255);
+            CRGB color = CHSV(hue, 255, 255);
+            CRGB color2 = CHSV(hue + 32, 255, 255);
 
-        uint32_t param2 = 0;
-        uint32_t param3 = 0;
-        memcpy(&param2, &color, sizeof(CRGB));
-        memcpy(&param3, &color2, sizeof(CRGB));
-        
-        this->setEffect(this->rotatingBeamEffect, 2000, param2, param3);
-        break;
-    }
+            uint32_t param2 = 0;
+            uint32_t param3 = 0;
+            memcpy(&param2, &color, sizeof(CRGB));
+            memcpy(&param3, &color2, sizeof(CRGB));
+            
+            this->setEffect(this->rotatingBeamEffect, 2000, param2, param3);
+            break;
+        }
 
-    case Controller::Effects::STROBE:
-        this->setEffect(this->strobeEffect, 2500, 4, CRGB::White, 5);
-        break;
+        case Controller::Effects::STROBE:
+            this->setEffect(this->strobeEffect, 2500, 4, CRGB::White, 5);
+            break;
 
-    case Controller::Effects::STATIC_FILTER:
-        this->setEffect(this->staticFilterEffect, 2000, CRGB::White, CRGB::Red);
-        break;
-    
-    default:
-        this->setEffect(this->getEffectById(this->effectIndex));
-        break;
+        case Controller::Effects::STATIC_FILTER: {
+            uint32_t color;
+
+            switch (this->iterations % 3) {
+                case 0:
+                    color = CRGB::Red;
+                    break;
+                case 1:
+                    color = CRGB::Green;
+                    break;
+                case 2: 
+                    color = CRGB::Blue;
+                    break;
+            }
+            
+            this->setEffect(this->staticFilterEffect, 2000, CRGB::White, color);
+            break;
+        }
+
+        default:
+            this->setEffect(this->getEffectById(this->effectIndex));
+            break;
     }
 
     this->effectIndex ++;
-    if (this->effectIndex == Controller::Effects::EFFECT_MAX) this->effectIndex = 0;
+    if (this->effectIndex == Controller::Effects::EFFECT_MAX) {
+        this->effectIndex = 0;
+        this->iterations ++;
+    }
 }
 
 uint32_t Controller::getMillis() {
