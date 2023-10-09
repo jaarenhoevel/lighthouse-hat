@@ -41,6 +41,11 @@ void PixelMatrix::update() {
         while (pos >= 1) pos -= 1;
         while (posRotated >= 1) posRotated -= 1;
 
+        if (this->mirrored) {
+            pos = fabs(pos - 1.f);
+            posRotated = fabs(posRotated - 1.f);     
+        }
+
         uint8_t mappedPixel = pos * (PIXEL_COUNT - 1);
         uint8_t mappedPixelRotated = posRotated * (PIXEL_COUNT - 1);
 
