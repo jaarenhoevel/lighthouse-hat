@@ -7,6 +7,7 @@ Controller::Controller() {
     this->rainbowEffect = new RainbowEffect(pm);
     this->rotatingBeamEffect = new RotatingBeamEffect(pm);
     this->strobeEffect = new StrobeEffect(pm);
+    this->staticFilterEffect = new StaticFilterEffect(pm);
 
     Serial.printf("\nInit complete");
 
@@ -57,6 +58,9 @@ Effect* Controller::getEffectById(uint16_t id) {
 
     case Controller::Effects::STROBE:
         return this->strobeEffect;
+
+    case Controller::Effects::STATIC_FILTER:
+        return this->staticFilterEffect;
     
     default:
         return NULL;
@@ -92,6 +96,10 @@ void Controller::nextEffect() {
 
     case Controller::Effects::STROBE:
         this->setEffect(this->strobeEffect, 2500, 4, CRGB::White, 5);
+        break;
+
+    case Controller::Effects::STATIC_FILTER:
+        this->setEffect(this->staticFilterEffect, 2000, CRGB::White, CRGB::Red);
         break;
     
     default:
