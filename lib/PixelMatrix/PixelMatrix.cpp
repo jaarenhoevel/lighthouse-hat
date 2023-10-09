@@ -22,6 +22,10 @@ void PixelMatrix::setRotationDirection(bool clockwise) {
     this->clockwise = clockwise;
 }
 
+void PixelMatrix::setMirrored(bool mirrored) {
+    this->mirrored = mirrored;
+}
+
 void PixelMatrix::update() {
     if (this->rotationEnabled) {
         this->rotation = ((millis() + this->millisOffset) % this->rotationSpeed) / (1.f * this->rotationSpeed);

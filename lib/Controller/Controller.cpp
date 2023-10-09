@@ -73,7 +73,7 @@ void Controller::nextEffect() {
     
     switch (this->effectIndex) {
     case Controller::Effects::BLINDER:
-        this->setEffect(this->blinderEffect, 750);
+        this->setEffect(this->blinderEffect, 1000);
         break;
 
     case Controller::Effects::RAINBOW:
@@ -158,6 +158,7 @@ void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
         this->millisOffset = 0;
         this->pm->setMillisOffset(this->millisOffset);
         this->pm->setMirrored(false);
+        this->pm->setRotationDirection(true);
 
         // Serial.printf("\nI am the master :)");
         return;
@@ -167,6 +168,7 @@ void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
     this->millisOffset = status.millis - millis();
     this->pm->setMillisOffset(this->millisOffset);
     this->pm->setMirrored(true); // Set as mirrored for slaves
+    this->pm->setRotationDirection(false);
 
     // Serial.printf("\nReceived master millis :( adjusting offset");
 
