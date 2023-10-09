@@ -149,7 +149,7 @@ void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
         this->isMaster = true;
         this->millisOffset = 0;
         this->pm->setMillisOffset(this->millisOffset);
-        this->pm->setRotationDirection(true);
+        this->pm->setMirrored(false);
 
         // Serial.printf("\nI am the master :)");
         return;
@@ -158,7 +158,7 @@ void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
     this->isMaster = false;
     this->millisOffset = status.millis - millis();
     this->pm->setMillisOffset(this->millisOffset);
-    this->pm->setRotationDirection(false); // Set default rotation direction to ccw
+    this->pm->setMirrored(true); // Set as mirrored for slaves
 
     // Serial.printf("\nReceived master millis :( adjusting offset");
 
