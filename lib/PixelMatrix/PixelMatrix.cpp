@@ -4,8 +4,17 @@ PixelMatrix::PixelMatrix() {
     this->leds = new CRGB[LED_COUNT];
     this->pixels = new CRGB[PIXEL_COUNT];
     this->filter = new CRGB[PIXEL_COUNT];
+
+    Rgbw rgbw = Rgbw(
+        kRGBWDefaultColorTemp,
+        kRGBWMaxBrightness,      // Mode
+        W3                     // W-placement
+    );
+
+    typedef WS2812<LED_PIN, RGB> ControllerT;  // RGB mode must be RGB, no re-ordering allowed.
+    static RGBWEmulatedController<ControllerT, GRB> rgbwEmu(rgbw);  // ordering goes here.
     
-    FastLED.addLeds<LED_TYPE, LED_PIN, LED_COLOR>(this->leds, LED_COUNT).setCorrection(TypicalPixelString);
+    FastLED.addLeds(&rgbwEmu, leds, LED_COUNT);
     FastLED.setBrightness(255);
 
     fill_solid(this->pixels, PIXEL_COUNT, CRGB::Black);
