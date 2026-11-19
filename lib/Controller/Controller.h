@@ -11,7 +11,7 @@
 #include <StaticFilterEffect.cpp>
 
 #define FRAME_INTERVAL  25
-#define EFFECT_INTERVAL 60000
+#define EFFECT_INTERVAL 600000
 #define BEACON_INTERVAL 1000
 
 #define MAGIC           0xBEAC07
@@ -21,10 +21,10 @@ class Controller {
         Controller();
 
         enum Effects {
-            BLINDER,
+            //BLINDER,
             RAINBOW,
             ROTATING_BEAM,
-            STROBE,
+            //STROBE,
             STATIC_FILTER,
             EFFECT_MAX
         };

@@ -3,10 +3,10 @@
 Controller::Controller() {
     this->pm = new PixelMatrix();
 
-    this->blinderEffect = new BlinderEffect(pm);
+    //this->blinderEffect = new BlinderEffect(pm);
     this->rainbowEffect = new RainbowEffect(pm);
     this->rotatingBeamEffect = new RotatingBeamEffect(pm);
-    this->strobeEffect = new StrobeEffect(pm);
+    //this->strobeEffect = new StrobeEffect(pm);
     this->staticFilterEffect = new StaticFilterEffect(pm);
 
     Serial.printf("\nInit complete");
@@ -47,8 +47,8 @@ void Controller::setEffect(Effect *effect, uint32_t param1, uint32_t param2, uin
 
 Effect* Controller::getEffectById(uint16_t id) {
     switch (id) {
-    case Controller::Effects::BLINDER:
-        return this->blinderEffect;
+    // case Controller::Effects::BLINDER:
+    //     return this->blinderEffect;
 
     case Controller::Effects::RAINBOW:
         return this->rainbowEffect;
@@ -56,8 +56,8 @@ Effect* Controller::getEffectById(uint16_t id) {
     case Controller::Effects::ROTATING_BEAM:
         return this->rotatingBeamEffect;
 
-    case Controller::Effects::STROBE:
-        return this->strobeEffect;
+    // case Controller::Effects::STROBE:
+    //     return this->strobeEffect;
 
     case Controller::Effects::STATIC_FILTER:
         return this->staticFilterEffect;
@@ -72,12 +72,12 @@ void Controller::nextEffect() {
     this->currentEffectId = this->effectIndex; // update current effect index
     
     switch (this->effectIndex) {
-        case Controller::Effects::BLINDER:
-            this->setEffect(this->blinderEffect, 1000);
-            break;
+        // case Controller::Effects::BLINDER:
+        //     this->setEffect(this->blinderEffect, 1000);
+        //     break;
 
         case Controller::Effects::RAINBOW:
-            this->setEffect(this->rainbowEffect, 5000);
+            this->setEffect(this->rainbowEffect, 10000);
             break;
 
         case Controller::Effects::ROTATING_BEAM: {       
@@ -90,13 +90,13 @@ void Controller::nextEffect() {
             memcpy(&param2, &color, sizeof(CRGB));
             memcpy(&param3, &color2, sizeof(CRGB));
             
-            this->setEffect(this->rotatingBeamEffect, 2000, param2, param3);
+            this->setEffect(this->rotatingBeamEffect, 4000, param2, param3);
             break;
         }
 
-        case Controller::Effects::STROBE:
-            this->setEffect(this->strobeEffect, 2500, 4, CRGB::White, 5);
-            break;
+        // case Controller::Effects::STROBE:
+        //     this->setEffect(this->strobeEffect, 2500, 4, CRGB::White, 5);
+        //     break;
 
         case Controller::Effects::STATIC_FILTER: {
             uint32_t color;
@@ -113,7 +113,7 @@ void Controller::nextEffect() {
                     break;
             }
             
-            this->setEffect(this->staticFilterEffect, 2000, CRGB::White, color);
+            this->setEffect(this->staticFilterEffect, 4000, CRGB::White, color);
             break;
         }
 
@@ -134,6 +134,8 @@ uint32_t Controller::getMillis() {
 }
 
 void Controller::broadcastStatus() {
+    return;
+
     Beacon status;
 
     status.magic = MAGIC;
@@ -153,6 +155,7 @@ void Controller::broadcastStatus() {
 }
 
 void Controller::handleBeacon(uint8_t *mac, uint8_t *data, int len) {
+    return;
     // Serial.printf("\nReceived something... let's see");
     
     if (len != sizeof(Beacon)) {
